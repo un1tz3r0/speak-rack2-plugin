@@ -1,0 +1,71 @@
+{
+  "slug": "vcvspeak",
+  "name": "vcvspeak",
+  "version": "2.6.4",
+  "license": "GPL-3.0-or-later",
+  "brand": "un1tz3r0",
+  "author": "Victor Michael Ondras-Condino",
+  "authorEmail": "",
+  "authorUrl": "https://github.com/un1tz3r0",
+  "pluginUrl": "https://github.com/un1tz3r0/speak-rack2-plugin",
+  "sourceUrl": "https://github.com/un1tz3r0/speak-rack2-plugin",
+  "manualUrl": "https://github.com/un1tz3r0/speak-rack2-plugin#readme",
+  "changelogUrl": "https://github.com/un1tz3r0/speak-rack2-plugin/blob/main/CHANGELOG.md",
+  "donateUrl": "",
+  "modules": [
+    {
+      "slug": "SpeakCompact",
+      "name": "Speak",
+      "description": "Triggerable classic format-based speech synthesiser, with controllable pitch, speed, voice and formant, and per-line/per-word trigger input and gate output.",
+      "tags": [
+        "Sample",
+        "Sequencer",
+        "Voltage-controlled oscillator"
+      ],
+      "keywords": [
+				"speak",
+        "tts",
+        "speech",
+        "espeak",
+        "flite",
+        "voice",
+        "vocal",
+        "text"
+      ]
+    },
+    {
+      "slug": "SpeakFace",
+      "name": "Speak Pix",
+      "description": "Expander: pixel-art lip-synched visualizer for Speak",
+      "tags": [
+        "Expander",
+        "Visual"
+      ],
+      "keywords": [
+      	"speak",
+        "face",
+        "lip sync",
+        "avatar",
+        "display"
+      ]
+    },
+    {
+      "slug": "SpeakOuts",
+      "name": "Speak Outs",
+      "description": "Expander: extra outputs for Speak: line, word and phoneme gates and indices, end-of-line trigger and speech envelope",
+      "tags": [
+        "Expander",
+        "Utility"
+      ],
+      "keywords": [
+      	"speak",
+        "output",
+        "trigger",
+        "gate",
+        "phoneme",
+        "word",
+        "envelope"
+      ]
+    }
+  ]
+}
