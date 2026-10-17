@@ -1,0 +1,79 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build:
+    name: build-${{ matrix.platform }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: lin-x64
+            os: ubuntu-22.04
+          - platform: mac-x64
+            os: macos-14
+            cross_compile: x86_64-apple-darwin
+          - platform: mac-arm64
+            os: macos-14
+            cross_compile: arm64-apple-darwin
+          - platform: win-x64
+            os: windows-2022
+    defaults:
+      run:
+        shell: ${{ matrix.platform == 'win-x64' && 'msys2 {0}' || 'bash' }}
+    env:
+      CROSS_COMPILE: ${{ matrix.cross_compile }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up MSYS2 (Windows)
+        if: matrix.platform == 'win-x64'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            git make zip unzip curl
+            mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-cmake
+            autotools
+
+      - name: Install dependencies (Linux)
+        if: startsWith(matrix.platform, 'lin')
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake zip unzip libgl1-mesa-dev libglu1-mesa-dev \
+            autoconf automake libtool
+
+      - name: Install dependencies (macOS)
+        if: startsWith(matrix.platform, 'mac')
+        run: brew install cmake zip autoconf automake libtool
+
+      - name: Get Rack SDK
+        run: |
+          curl -fsSL -o Rack-SDK.zip \
+            "https://vcvrack.com/downloads/Rack-SDK-latest-${{ matrix.platform }}.zip"
+          unzip -q Rack-SDK.zip
+
+      - name: Build dependencies (eSpeak NG, Flite, voice data)
+        run: |
+          export RACK_DIR="$GITHUB_WORKSPACE/Rack-SDK"
+          make dep
+
+      - name: Build and package plugin
+        run: |
+          export RACK_DIR="$GITHUB_WORKSPACE/Rack-SDK"
+          make -j4 dist
+
+      - name: Upload plugin package
+        uses: actions/upload-artifact@v4
+        with:
+          name: plugin-${{ matrix.platform }}
+          path: dist/*.vcvplugin
+          if-no-files-found: error
